@@ -1,0 +1,40 @@
+services:
+  bun:
+    container_name: bun
+    build:
+      context: ./bun
+      dockerfile: dev.Dockerfile
+    restart: always
+    volumes:
+      - ./bun:/app
+    ports:
+      - "3007:3007"
+    networks:
+      - internal
+
+  node:
+    container_name: node
+    build:
+      context: ./node
+      dockerfile: dev.Dockerfile
+    restart: always
+    volumes:
+      - ./node:/app
+    ports:
+      - "3005:3005"
+    networks:
+      - internal
+
+  golang:
+    container_name: golang
+    build:
+      context: ./golang
+    restart: always
+    ports: 
+      - "3001:3001"
+      
+networks:
+  internal:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

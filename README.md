@@ -1,0 +1,1 @@
+Тест производительности для javascript (node, bun) и Golang
