@@ -32,7 +32,21 @@ services:
     restart: always
     ports: 
       - "3001:3001"
-      
+
+  # cpp:
+  #   container_name: cpp-app
+  #   build:
+  #     context: ./cpp
+  #     dockerfile: dev.Dockerfile
+  #   restart: always
+  #   volumes:
+  #     - ./cpp:/app
+  #   ports:
+  #     - "4000:4000"
+  #   networks:
+  #     - internal
+  #   command: ["/app/cpp_server"]
+
 networks:
   internal:
     driver: bridge
