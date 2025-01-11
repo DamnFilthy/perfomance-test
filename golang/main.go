@@ -9,20 +9,27 @@ import (
   "time"
 )
 
-const USERS = 10_000_000
+const USERS = 100_000_000
 
 type User struct {
-  ID      int    `json:"id"`
-  Name    string `json:"name"`
-  Content string `json:"content"`
+  ID      int
+  Content string
 }
 
-func (u *User) getUser() *User {
+func (u User) MarshalJSON() ([]byte, error) {
   var s strings.Builder
-  s.WriteString("User")
-  s.WriteString(strconv.FormatInt(int64(u.ID), 10))
-  u.Name = s.String()
-  return u
+    s.WriteString("User")
+    s.WriteString(strconv.FormatInt(int64(u.ID), 10))
+
+    return json.Marshal(struct {
+        ID      int    `json:"id"`
+      Name    string `json:"name"`
+      Content string `json:"content"`
+    }{
+        ID: u.ID,
+        Name: s.String(),
+        Content:  u.Content,
+    })
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
@@ -51,9 +58,11 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 
   selectedUser := filteredResult[midIndex]
 
+  b, _ := json.Marshal(selectedUser)
+
   // Сериализация в JSON
   w.Header().Set("Content-Type", "application/json")
-  json.NewEncoder(w).Encode(selectedUser.getUser())
+  w.Write(b)
 
   duration := time.Since(start)
   fmt.Println("Total duration:", duration)
